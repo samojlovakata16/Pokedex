@@ -1,3 +1,8 @@
+// TO-DO: Using a manually defined list of require imports because:
+// 1. In React Native, you can't use dynamic require statements (e.g., require(`../assets/${i}.png`)) — it's a limitation of the Metro bundler.
+// 2. Using a loop or reduce to generate paths won't work with require, as the paths must be static at build time.
+// 3. This ensures all images are bundled correctly and paths are resolved without runtime errors by explicitly listing them.
+
 const images: Record<number, number> = {
   1: require('../assets/1.png'),
   2: require('../assets/2.png'),
