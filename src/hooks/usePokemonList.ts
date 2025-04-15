@@ -1,11 +1,11 @@
 import {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from '../redux/store';
-import {fetchPokemons} from '../redux/pokemonSlice';
+import {useAppDispatch, useAppSelector} from '../store/store';
 import {
+  fetchPokemons,
   selectFilteredPokemons,
   selectPokemonError,
   selectPokemonStatus,
-} from '../redux/pokemonSelectors';
+} from '../store/pokemon';
 
 export function usePokemonList() {
   const dispatch = useAppDispatch();

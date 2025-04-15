@@ -1,12 +1,13 @@
 import {useCallback} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {BasicPokemon, RootStackParamList} from '../types';
-import {usePokemonList} from '../hooks/usePokemonList';
-import PokemonCard from '../components/PokemonCard';
-import StatusMessage from '../components/StatusMessage';
-import SearchBar from '../components/SearchBar';
-import {FlashList} from '@shopify/flash-list';
+import PokemonList from './components/PokemonList';
+import {usePokemonList} from '../../hooks/usePokemonList';
+import PokemonCard from '../../components/PokemonCard';
+import StatusMessage from '../../components/StatusMessage';
+import SearchBar from '../../components/SearchBar';
+import {RootStackParamList} from '../../types/navigation';
+import {BasicPokemon} from '../../types/domain/pokemon';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -23,6 +24,11 @@ export default function HomeScreen({navigation}: Props) {
     [navigation],
   );
 
+  const _keyExtractor = useCallback(
+    (item: BasicPokemon) => item.id.toString(),
+    [],
+  );
+
   if (status === 'loading') {
     return <StatusMessage text="Loading..." isLoading />;
   }
@@ -37,12 +43,10 @@ export default function HomeScreen({navigation}: Props) {
       {filtered.length === 0 ? (
         <StatusMessage text="No Pokémon found 😢" />
       ) : (
-        <FlashList
+        <PokemonList
           data={filtered}
-          estimatedItemSize={50}
-          keyExtractor={item => item.id.toString()}
           renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
+          keyExtractor={_keyExtractor}
         />
       )}
     </View>

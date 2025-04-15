@@ -11,11 +11,9 @@ type Props = {
   children: React.ReactNode | React.ReactNode[];
 };
 
-function AppLayout({children}: Props) {
+export default function AppLayout({children}: Props) {
   return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
 }
-
-export default React.memo(AppLayout);
 
 const styles = StyleSheet.create({
   container: {

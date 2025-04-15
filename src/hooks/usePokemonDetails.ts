@@ -1,11 +1,13 @@
 import {useEffect, useMemo} from 'react';
-import {useAppDispatch, useAppSelector} from '../redux/store';
+import {useAppDispatch, useAppSelector} from '../store/store';
 import {
+  fetchPokemonById,
   selectPokemonDetailsById,
   selectPokemonDetailsErrorById,
   selectPokemonDetailsLoadingById,
-} from '../redux/pokemonSelectors';
-import {fetchPokemonById} from '../redux/pokemonSlice';
+} from '../store/pokemon';
+
+const dispatchedIds = new Set<number>(); // 👈 глобальна памʼять, які ID вже диспатчились
 
 export function usePokemonDetails(pokemonId: number) {
   const dispatch = useAppDispatch();
@@ -14,22 +16,19 @@ export function usePokemonDetails(pokemonId: number) {
   const error = useAppSelector(selectPokemonDetailsErrorById(pokemonId));
 
   useEffect(() => {
-    if (!data && !loading && !error) {
+    if (!data && !loading && error === null && !dispatchedIds.has(pokemonId)) {
+      dispatchedIds.add(pokemonId);
       dispatch(fetchPokemonById(pokemonId));
     }
-  }, [data, loading, error, dispatch, pokemonId]);
+  }, [data, loading, error, pokemonId, dispatch]);
 
   const types = useMemo(() => {
-    if (!data?.types) {
-      return 'Unknown';
-    }
+    if (!data?.types) return 'Unknown';
     return data.types.map(t => t.type.name).join(', ');
   }, [data]);
 
   const stats = useMemo(() => {
-    if (!data?.stats) {
-      return [];
-    }
+    if (!data?.stats) return [];
     return data.stats.map(
       stat => `${stat.stat.name.toUpperCase()}: ${stat.base_stat}`,
     );

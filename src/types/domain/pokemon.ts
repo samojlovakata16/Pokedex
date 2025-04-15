@@ -1,8 +1,3 @@
-export type RootStackParamList = {
-  Home: undefined;
-  Details: {pokemon: BasicPokemon};
-};
-
 export interface BasicPokemon {
   id: number;
   name: string;

@@ -1,17 +1,8 @@
-import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
-import {BasicPokemon, Pokemon} from '../types';
-import {normalizePokemon} from '../utils/normalizePokemon';
-import {getAllPokemons, getPokemonById} from '../api/pokemonApi';
-
-interface PokemonState {
-  byId: Record<number, BasicPokemon>;
-  allIds: number[];
-  detailsById: Record<number, Pokemon>;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
-  loadingById: Record<number, boolean>;
-  errorById: Record<number, string | null>;
-}
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {fetchPokemons, fetchPokemonById} from './pokemonThunks';
+import {normalizePokemon} from '../../utils/normalizePokemon';
+import {PokemonState} from '../../types/store/pokemonStore';
+import {BasicPokemon, Pokemon} from '../../types/domain/pokemon';
 
 const initialState: PokemonState = {
   byId: {},
@@ -23,39 +14,13 @@ const initialState: PokemonState = {
   errorById: {},
 };
 
-// Fetch base list of Pokémons
-export const fetchPokemons = createAsyncThunk<
-  BasicPokemon[],
-  void,
-  {rejectValue: string}
->('pokemons/fetch', async (_, {rejectWithValue}) => {
-  try {
-    return await getAllPokemons();
-  } catch {
-    return rejectWithValue('Failed to load Pokémons');
-  }
-});
-
-// Fetch details by ID
-export const fetchPokemonById = createAsyncThunk<
-  Pokemon,
-  number,
-  {rejectValue: string}
->('pokemons/fetchById', async (id, {rejectWithValue}) => {
-  try {
-    return await getPokemonById(id);
-  } catch {
-    return rejectWithValue('Failed to load Pokémon details');
-  }
-});
-
 const pokemonSlice = createSlice({
   name: 'pokemons',
   initialState,
   reducers: {},
   extraReducers: builder => {
     builder
-      // base list
+      // Base list
       .addCase(fetchPokemons.pending, state => {
         state.status = 'loading';
         state.error = null;
@@ -81,11 +46,11 @@ const pokemonSlice = createSlice({
         state.error = action.payload ?? 'Unknown error';
       })
 
-      // details by id
+      // Details by ID
       .addCase(fetchPokemonById.pending, (state, action) => {
         const id = action.meta.arg;
         state.loadingById[id] = true;
-        state.errorById[id] = null;
+        state.errorById[id] = null; // обов'язково очищаємо
       })
       .addCase(
         fetchPokemonById.fulfilled,

@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance';
-import {BasicPokemon, Pokemon} from '../types';
+import {BasicPokemon, Pokemon} from '../types/domain/pokemon';
 
 export async function getAllPokemons(): Promise<BasicPokemon[]> {
   const res = await axiosInstance.get('/pokemon?limit=151');

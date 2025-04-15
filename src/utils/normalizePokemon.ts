@@ -1,4 +1,4 @@
-import {Pokemon} from '../types';
+import {Pokemon} from '../types/domain/pokemon';
 
 export function normalizePokemon(data: Pokemon) {
   return {

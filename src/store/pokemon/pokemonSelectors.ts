@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect';
-import {RootState} from './store';
+import {RootState} from '../store';
 
 export const selectPokemonStatus = (state: RootState) => state.pokemons.status;
 export const selectPokemonError = (state: RootState) => state.pokemons.error;

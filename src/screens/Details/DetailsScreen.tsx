@@ -1,11 +1,11 @@
 import {ScrollView, Text, Image, View, StyleSheet} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../types';
-import {usePokemonDetails} from '../hooks/usePokemonDetails';
-import AppLayout from '../components/AppLayout';
-import StatusMessage from '../components/StatusMessage';
-import {getPokemonImage} from '../utils/getPokemonImage';
-import LabelValue from '../components/LabelValue';
+import {RootStackParamList} from '../../types/navigation';
+import {usePokemonDetails} from '../../hooks/usePokemonDetails';
+import AppLayout from '../../components/AppLayout';
+import StatusMessage from '../../components/StatusMessage';
+import {getPokemonImage} from '../../utils/getPokemonImage';
+import LabelValue from '../../components/LabelValue';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Details'>;
 
@@ -13,18 +13,18 @@ export default function DetailsScreen({route}: Props) {
   const {pokemon} = route.params;
   const {data, loading, error, types, stats} = usePokemonDetails(pokemon.id);
 
-  if (loading || !data) {
-    return (
-      <AppLayout>
-        <StatusMessage text="Loading..." isLoading />
-      </AppLayout>
-    );
-  }
-
   if (error) {
     return (
       <AppLayout>
         <StatusMessage text={error} isError />
+      </AppLayout>
+    );
+  }
+
+  if (loading || !data) {
+    return (
+      <AppLayout>
+        <StatusMessage text="Loading..." isLoading />
       </AppLayout>
     );
   }
